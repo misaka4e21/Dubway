@@ -6,7 +6,8 @@ int
 main (int argc, char *argv[])
 {
   QCoreApplication app(argc,argv);
-  subway::dubway::PluginLoader pl(QDir::current().filePath("plugin").toLocal8Bit());
+  subway::dubway::PluginLoader pl((app.applicationDirPath()+"/plugin.so").toLocal8Bit());
   QObject *qo = pl.instance ("A");
+  QMetaObject::invokeMethod (qo, "testa");
   return app.exec();
 }

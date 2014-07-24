@@ -5,6 +5,7 @@
 #include <QScopedPointer>
 #include <QLibrary>
 #include <QString>
+#include <QDebug>
 
 DUBWAY_NS_BEGIN
 
@@ -16,11 +17,15 @@ public:
   PluginLoader (const QString & fileName, QObject * parent = 0)
    : QObject(parent), m_lib(new QLibrary (fileName)), m_loaded(true)
   {
+    m_lib->setLoadHints (QLibrary::ResolveAllSymbolsHint);
+    m_lib->load ();
   }
 
   PluginLoader (QLibrary * lib, QObject * parent = 0)
    : QObject(parent), m_lib(lib),m_loaded(true)
   {
+    m_lib->setLoadHints (QLibrary::ResolveAllSymbolsHint);
+    m_lib->load ();
   }
 
   void load ()
@@ -40,7 +45,13 @@ public:
     CreatorFPointer fp
       = (CreatorFPointer)
           m_lib->resolve (fn.toStdString ().c_str());
-    return fp();
+    if (fp != NULL)
+      return fp ();
+    else
+      {
+        qDebug() << m_lib->errorString();
+        return NULL;
+      }
   }
 
 private:

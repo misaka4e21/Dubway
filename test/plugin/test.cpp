@@ -14,3 +14,5 @@ public slots:
 };
 
 DUBWAY_PLUGIN_EXPORT_CLASS(A)
+
+#include "test.moc"

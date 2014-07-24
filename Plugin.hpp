@@ -7,7 +7,7 @@
 
 DUBWAY_NS_BEGIN
 
-static QList<QMetaObject> _all_static_metaobjects;
+QList<QMetaObject> _all_static_metaobjects;
 
 template <typename T>
 class ClassWrapper
@@ -40,11 +40,13 @@ DUBWAY_NS_END
   * ClassWrapper<CLASS>::create();
   */
 #define DUBWAY_PLUGIN_EXPORT_CREATE(CLASS)\
-  extern "C"  QObject *\
-  __dbw_plugin_export_create_##CLASS () \
-  { \
-    return __dbw_classwrapper_##CLASS.create();\
-  } \
+  extern "C" {\
+    QObject *\
+    __dbw_plugin_export_create_##CLASS () \
+    { \
+      return (QObject *)::__dbw_classwrapper_##CLASS.create();\
+    } \
+  }
 
 #define DUBWAY_PLUGIN_EXPORT_CLASS(CLASS)\
   DUBWAY_GLOBAL_CLASSWRAPPER(CLASS)\
